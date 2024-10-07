@@ -16,11 +16,11 @@ export const getVisibility = (unitSystem, visibilityInMeters) =>
 export const getTime = (unitSystem, currentTime, timezone) =>
   unitSystem == "metric"
     ? unixToLocalTime(currentTime, timezone)
-    : timeTo12HourFormat(unixToLocalTime(currentTime, timezone));
+    : timeTo12HourFormat(unixToLocalTime(currentTime));
 
-export const getAMPM = (unitSystem, currentTime, timezone) =>
+export const getAMPM = (unitSystem, currentTime) =>
   unitSystem === "imperial"
-    ? unixToLocalTime(currentTime, timezone).split(":")[0] >= 12
+    ? unixToLocalTime(currentTime).split(":")[0] >= 12
       ? "PM"
       : "AM"
     : "";
@@ -51,6 +51,8 @@ export const getVisibilityData = (unitSystem, timeData, visibilityData) => {
   }
 };
 
+
+// Get icon card from iconName
 export const getIconCard = (iconName) => {
   if (iconName === 0) return "/icons/01d.svg";
   if (iconName === 1 || iconName === 2 || iconName === 3)

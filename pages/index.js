@@ -4,7 +4,7 @@ import { MainCard } from "../components/MainCard";
 import { ContentBox } from "../components/ContentBox";
 import { Header } from "../components/Header";
 import { DateAndTime } from "../components/DateAndTime";
-import { Search } from "../components/Search";
+// import { Search } from "../components/Search";
 import { MetricsBox } from "../components/MetricsBox";
 import { UnitSwitch } from "../components/UnitSwitch";
 import { LoadingScreen } from "../components/LoadingScreen";
@@ -15,24 +15,31 @@ import cityConfiguration from "../public/cityConfiguration.json";
 import styles from "../styles/Home.module.css";
 
 export const App = () => {
-  const [cityInput, setCityInput] = useState("Riga");
-  const [triggerFetch, setTriggerFetch] = useState(true);
+  // const [cityInput, setCityInput] = useState("Riga");
+  // const [triggerFetch, setTriggerFetch] = useState(true);
   const [weatherData, setWeatherData] = useState();
   const [unitSystem, setUnitSystem] = useState("metric");
 
+  // refresh after 1 hour
   useEffect(() => {
     const getData = async () => {
-      const res = await fetch("api/data", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cityInput }),
-      });
-      const data = await res.json();
-      setWeatherData({ ...data });
-      setCityInput("");
+      try {
+        const res = await fetch("api/data");
+        const data = await res.json();
+        setWeatherData({ ...data });
+      } catch (error) {
+        console.error(
+          "Erreur dans la récupération des données météorologiques",
+          error
+        );
+      }
     };
     getData();
-  }, [triggerFetch]);
+    const interval = setInterval(() => {
+      getData();
+    }, 3600000);
+    return () => clearInterval(interval);
+  }, []);
 
   const changeSystem = () =>
     unitSystem == "metric"
